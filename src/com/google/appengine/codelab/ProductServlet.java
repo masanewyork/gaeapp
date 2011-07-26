@@ -39,12 +39,12 @@ import com.google.appengine.codelab.Util;
 public class ProductServlet extends BaseServlet {
 
   private static final Logger logger = Logger.getLogger(ProductServlet.class.getCanonicalName());
-
   /**
    * Get the entities in JSON format.
-  */
+   */
+
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+      throws ServletException, IOException {
     super.doGet(req, resp);
     logger.log(Level.INFO, "Obtaining product listing");
     String searchFor = req.getParameter("q");
@@ -52,24 +52,25 @@ public class ProductServlet extends BaseServlet {
     Iterable<Entity> entities = null;
     if (searchFor == null || searchFor.equals("") || searchFor == "*") {
       entities = Product.getAllProducts("Product");
-	  out.println(Util.writeJSON(entities));
+      out.println(Util.writeJSON(entities));
     } else {
-	  Entity e = Product.getProduct(searchFor);
-	  if (e != null) {
-		Set<Entity> result = new HashSet<Entity>();
-		result.add(e);
-		out.println(Util.writeJSON(result));
-	  }
+      Entity e = Product.getProduct(searchFor);
+      if (e != null) {
+        Set<Entity> result = new HashSet<Entity>();
+        result.add(e);
+        out.println(Util.writeJSON(result));
+      }
     }
   }
 
-	/**
-	 * Create the entity and persist it.
-	 */
+  /**
+   * Create the entity and persist it.
+   */
   protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-	  throws ServletException, IOException {
-	logger.log(Level.INFO, "Creating Product");
+      throws ServletException, IOException {
+    logger.log(Level.INFO, "Creating Product");
     PrintWriter out = resp.getWriter();
+
     String category = req.getParameter("name");
     String description = req.getParameter("description");
     try {
@@ -80,43 +81,43 @@ public class ProductServlet extends BaseServlet {
     }
   }
 
-	/**
-	 * Delete the product. Gives an error when we try to delete the product that has items
-	 * associated with it
-	 */
+  /**
+   * Delete the product
+   */
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-	  throws ServletException, IOException {
-    logger.log(Level.INFO, "Deleting the product");
+      throws ServletException, IOException {
     String productkey = req.getParameter("id");
     Key key = KeyFactory.createKey("Product", productkey);
     PrintWriter out = resp.getWriter();
     Iterable<Entity> entities = Util.listEntities("Item", "product", productkey);
     for (Entity e : entities) {
       if (e != null)
-		out.println("Cannot delete product as there are items associated with this product.");
-	  return;
+        out.println("Cannot delete product as there are items associated with this product.");
+      return;
     }
-	try {
-	  Util.deleteFromCache(key);
-	  Util.deleteEntity(key);
-	} catch (Exception e) {
-	  String msg = Util.getErrorResponse(e);
-	  out.print(msg);
+    try {
+      Util.deleteEntity(key);
+      out.println("Product deleted successfully.");
+    } catch (Exception e) {
+      String msg = Util.getErrorResponse(e);
+      out.print(msg);
     }
+
   }
 
-	/**
-	 * Redirect the call to doDelete or doPut method
-	 */
+  /**
+   * Redirect the call to doDelete or doPut method
+   */
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+      throws ServletException, IOException {
     String action = req.getParameter("action");
     if (action.equalsIgnoreCase("delete")) {
       doDelete(req, resp);
-	  return;
+      return;
     } else if (action.equalsIgnoreCase("put")) {
-	  doPut(req, resp);
+      doPut(req, resp);
       return;
     }
   }
+
 }

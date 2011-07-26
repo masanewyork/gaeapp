@@ -15,47 +15,27 @@
  */
 package com.google.appengine.codelab;
 
-import java.io.IOException;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
 
-/**
- * This class defines the methods for basic operations of create, update & retrieve
- * for order entity
- *  
- * @author
- *
- */
+
 public class Order {
 
-	/**
-	 * Create an entity if it does not exist, else update the existing entity.
-	 * The order has header and line item. Both needs to be added in a single transaction.
-	 * 
-	 * @param customerName
-	 *          : customer placing the order
-	 * @param itemName
-	 *          : name of item
-	 * @param quantity
-	 *          : number of units ordered for
-	 * @param price
-	 *          : total price of the order
-	 * @param shipTo
-	 *          : address where it needs to be shipped
-	 * @throws IOException 
-	 */
-  public static void createOrUpdateOrder(String customerName, String itemName,
-			String quantity, String price, String shipTo, String city, String state, String zip) throws IOException {
+  public static Entity createOrUpdateOrder(String customerName, String itemName,
+      String quantity, String price, String shipTo, String city, String state, String zip) {
+
     Transaction txn = Util.getDatastoreServiceInstance().beginTransaction();
     try {
       Entity customer = Customer.getSingleCustomer(customerName);
+      //Entity item = Item.getSingleItem(itemName);
       Key customerkey = customer.getKey();
+
       Entity order = new Entity("Order", customerkey);
       order.setProperty("customerName", customerName);
-      order.setProperty("status", "Processed");
+      order.setProperty("status", "Pending");
       order.setProperty("shipTo", shipTo);
       order.setProperty("city", city);
       order.setProperty("state", state);
@@ -63,36 +43,26 @@ public class Order {
       Util.getDatastoreServiceInstance().put(order);
 
       Entity lineItem = new Entity("LineItem", order.getKey());
-      // key to string can be inserted instead of name, a better option
+      //key to string can be inserted instead of name, a better option
       lineItem.setProperty("itemName", itemName);
       lineItem.setProperty("quantity", quantity);
       lineItem.setProperty("price", price);
       lineItem.setProperty("orderID", String.valueOf(order.getKey().getId()));
       Util.getDatastoreServiceInstance().put(lineItem);
       txn.commit();
+      return order;
     } finally {
       if (txn.isActive()) {
         txn.rollback();
       }
     }
   }
-
-	/**
-	 * Get all the orders
-	 * 
-	 * @return : list of all orders
-	 */
+  
   public static Iterable<Entity> getAllOrders() {
-    Iterable<Entity> entities = Util.listEntities("Order", null, null);
-    return entities;
+	  Iterable<Entity> entities = Util.listEntities("Order", null, null);
+	  return entities;
   }
-
-	/**
-	 * Get the list of orders for a specific customer
-	 * 
-	 * @param customerName
-	 * @return the list of orders as iterable
-	 */
+  
   public static Iterable<Entity> getAllOrdersForCustomer(String customerName) {
     Key customerKey = KeyFactory.createKey("Customer", customerName);
     return Util.listChildren("Order", customerKey);

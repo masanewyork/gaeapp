@@ -32,6 +32,10 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * This servlet responds to the request corresponding to orders. The Class
@@ -45,52 +49,64 @@ public class OrderServlet extends BaseServlet {
   private static final Logger logger = Logger.getLogger(OrderServlet.class.getCanonicalName());
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-	/**
-	 * Redirect the call to doDelete or doPut method.
-	 */
+  /**
+   * Redirect the call to doDelete or doPut method.
+   */
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+      throws ServletException, IOException {
+
     String action = req.getParameter("action");
     if (action.equalsIgnoreCase("delete")) {
       doDelete(req, resp);
       return;
     } else if (action.equalsIgnoreCase("put")) {
       doPut(req, resp);
+
       return;
     }
   }
 
-	/**
-	 * Insert the order and corresponding line item in a single transaction
-	 */
+  /**
+   * Insert the order and corresponding line item in a single transaction
+   */
   protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+      throws ServletException, IOException {
     logger.log(Level.INFO, "Inserting order into listing");
-    String itemName = req.getParameter("itemName");
-    String customerName = req.getParameter("customerName");
-    String shipTo = req.getParameter("shipto");
-    String city = req.getParameter("city");
-    String state = req.getParameter("state");
-    String zip = req.getParameter("zip");
-    String quantity = req.getParameter("quantity");
-    String price = req.getParameter("price");
-    Order.createOrUpdateOrder(customerName, itemName, quantity, price, shipTo, city, state, zip);
+	String itemName = req.getParameter("itemName");
+	String customerName = req.getParameter("customerName");
+	String shipTo = req.getParameter("shipto");
+	String city = req.getParameter("city");
+	String state = req.getParameter("state");
+	String zip = req.getParameter("zip");
+	String quantity = req.getParameter("quantity");
+	String price = req.getParameter("price");
+
+    Entity order = Order.createOrUpdateOrder(customerName, itemName, quantity, price, shipTo, city, state, zip);
+    
+    // Create Task and push it into Task Queue
+    Queue queue = QueueFactory.getQueue("OrderProcessingQueue");
+    TaskOptions taskOptions = TaskOptions.Builder.withUrl("/processOrder")
+        .param("customerName", customerName)
+        .param("orderKey", String.valueOf(order.getKey().getId())).method(Method.POST);
+    queue.add(taskOptions);
   }
 
-	/**
-	 * Delete the order and respective line items also in a single transaction
-	 */
+  /**
+   * Delete the order and respective line items also in a single transaction
+   */
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+      throws ServletException, IOException {
+
     logger.log(Level.INFO, "Deleting order from the listing");
     String orderId = req.getParameter("id");
     String customerName = req.getParameter("parentid");
-
+    
     Transaction txn = datastore.beginTransaction();
     try {
       Key parentKey = KeyFactory.createKey("Customer", customerName);
-      Key key = KeyFactory.createKey(parentKey, "Order",Integer.parseInt(orderId));
-	// CASCADE_ON_DELETE
+      Key key = KeyFactory.createKey(parentKey, "Order", Integer.parseInt(orderId));
+
+      // CASCADE_ON_DELETE
       Iterable<Entity> entities = Util.listChildKeys("LineItem", key);
       final List<Key> keys = new ArrayList<Key>();
       for (Entity e : entities) {
@@ -106,12 +122,12 @@ public class OrderServlet extends BaseServlet {
     }
   }
 
-	/**
-	 * Get the requested orders and the line items in JSON format
-	 */
+  /**
+   * Get the requested orders and the line items in JSON format
+   */
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-    super.doGet(req, resp);
+      throws ServletException, IOException {
+	super.doGet(req, resp);
     logger.log(Level.INFO, "Getting orders from listing");
     String searchFor = req.getParameter("q");
     Iterable<Entity> entities = null;

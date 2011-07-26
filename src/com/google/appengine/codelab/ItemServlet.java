@@ -1,11 +1,12 @@
 /**
- * Copyright 2011, Google Inc. All Rights Reserved.
+ * Copyright 2011 Google
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +42,7 @@ public class ItemServlet extends BaseServlet {
    */
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-  	super.doGet(req,resp);
+    super.doGet(req, resp);
     logger.log(Level.INFO, "Obtaining Item listing");
     String searchBy = req.getParameter("item-searchby");
     String searchFor = req.getParameter("q");
@@ -76,8 +77,6 @@ public class ItemServlet extends BaseServlet {
    */
   protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-  	super.doGet(req, resp);
-  	logger.log(Level.INFO, "Deleting Item");
     String itemKey = req.getParameter("id");
     PrintWriter out = resp.getWriter();
     Iterable<Entity> entities = Util.listEntities("LineItem", "itemName", itemKey);
@@ -88,7 +87,6 @@ public class ItemServlet extends BaseServlet {
         return;
       }
       Entity e = Item.getSingleItem(itemKey);
-      Util.deleteFromCache(e.getKey());
       Util.deleteEntity(e.getKey());
       out.print("Item deleted successfully.");
     } catch (Exception e) {

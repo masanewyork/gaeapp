@@ -46,7 +46,7 @@ public class Customer {
 	 *          : email id of customer
 	 */
   public static void createOrUpdateCustomer(String nickName, String firstName,
-			String lastName, String phone, String address, String city, String state, String zip, String email) {
+	  String lastName, String phone, String address, String city, String state, String zip, String email) {
     Entity customer = getSingleCustomer(nickName);
     if (customer == null) {
       customer = new Entity("Customer", nickName);

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>Google App Engine: Code Lab 2</title>
+<title>Google App Engine: Code Lab 3</title>
  
 
 <link href="http://www.gstatic.com/codesite/ph/17444577587916266307/css/ph_core.css" rel="stylesheet" type="text/css" />
@@ -17,7 +17,7 @@
    
   <!-- content -->  
   <div  id="gc-pagecontent" >
-  <h1 class="page_title">Code Lab Example 2</h1>
+  <h1 class="page_title">Code Lab Example 3</h1>
   
  <!-- tabs --> 
  <div id="tabs" class="gtb">
@@ -30,40 +30,17 @@
   </div>
   <!-- home page content -->
   <div class="g-unit" id="home-tab">
-  <h2>Create Flow Chart</h2>
+  <h2>Working with Queues & XMPP</h2>
     <p>
-      <div align="left">
-        <img src="images/codeLab2Create.png" />
-      </div>
-      
         <ol>
           <li>Product/Item servlet will be invoked on <b>Save</b>
             click from UI</li>
           <li>doPut() method of respective servlet will
             invoke <b>datastore API</b> to persist the data
             into datastore</li>
-          <li>Also, the same data copy is pushed into
-            memcache store.</li>
-        </ol>
-      </p>
-      
-    <h2>List Flow Chart</h2>
-     <p>
-      <div align="left">
-        <img src="images/codeLab2List.png" />
-      </div>
-     
-        <ol>
-          <li>On UI tab selection, doGet() of the
-            respective servlet gets called</li>
-          <li>Call to memcache store (using memcache API)
-            is made to check whether the entity requested is
-            available in memcache store.</li>
-          <li>If the data is not present in cache store
-            then, call will be forwarded to datastore.</li>
-          <li>JSON objects are returned to the UI and
-            custom JSON converter will parse the JSON
-            objects</li>
+          <li>At the same time, there is a job added to the task queue.</li>
+          <li>After sometime, when the queue processes the job, it sends a mail confirmation to the user regarding the order.</li>
+          <li>While placing the order, the customer can chat with a sales representative implemented through XMPP API</li>
         </ol>
       </p>
   </div>
@@ -160,7 +137,7 @@
   
    <!-- ******************************************* product ******************************************* -->
   <div class="g-unit" id="product-tab">
-    <div class ="message" id="product-show-message" style="display:none">
+  <div class ="message" id="product-show-message" style="display:none">
   </div>
    <!-- search container -->
    	<div class="gsc-search-box" id="product-search-ctr">
@@ -217,9 +194,9 @@
   
   </div>
    <!-- ******************************************* item ******************************************* -->
-  <div class="message" id="item-show-message" style="display:none">
-  </div>
   <div class="g-unit" id="item-tab">
+  <div class ="message" id="item-show-message" style="display:none">
+  </div>
 	   <!-- search container -->
 	   	<div class="gsc-search-box" id="item-search-ctr">
 	   	<!-- section title -->
@@ -281,7 +258,7 @@
   </div>
    <!-- ******************************************* order ******************************************* -->
   <div class="g-unit" id="order-tab">
-  <div class="message" id="order-show-message" style="display:none">
+  <div class ="message" id="order-show-message" style="display:none">
   </div>
 	   <!-- search container -->
 	   	<div class="gsc-search-box" id="order-search-ctr">
@@ -306,6 +283,7 @@
                  <th scope="col">Ship To</th>
 			  	<th scope="col">Quantity</th>
 			  	<th scope="col">Price</th>
+			  	<th scope="col">Status</th>
                 <th scope="col">Action</th>             
                </tr>
              </thead>
@@ -364,6 +342,18 @@
                   <input type="reset" id="order-reset" class="cancel" title="Reset" value="Reset" style="visibility: hidden"/>
               </td>
             </tr>
+            </table>
+            <table width="200" cellspacing="0" cellpadding="0">
+            <tr style="border:none !important;">
+             <td>&nbsp;</td>
+             <td style="border:none !important;">
+               <div style="padding-bottom: 3px;">
+               Enter your email Id to discuss with our sales representative:<input type="text" style="width: 266px;" title="List" id="chatId" />
+               <input type="submit" style="width: 90px;" title="List" value="Discuss" onclick="sendChatInvite()" />
+             </div>
+             </td>
+            </tr>
+                  
 			 </table>
 			 </form>
 			 </div>

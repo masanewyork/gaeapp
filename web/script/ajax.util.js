@@ -64,7 +64,6 @@ var param=function(name,value){
 
 //function to add an entity when user clicks on the add button in UI
 var add = function(entity) {
-	$('.message').hide();
 	$('#'+entity+'-reset').click();
 	//display the create container
 	showHideCreate(entity, true);
@@ -141,12 +140,13 @@ var formValidate = function(entity){
 			break;
 	}
 	save(entity);
-	$('#'+entity+'-show-message').hide();
+	$('.message').hide();
 }
 
 //function to save an entity
 var save = function(entity) {
-		// creating the data object to be sent to backend
+	$('.message').hide();
+	// creating the data object to be sent to backend
 	 var data=new Array();
 	// collecting the field values from the form
 	 var formEleList = $('form#'+entity+'-create-form').serializeArray();
@@ -161,6 +161,7 @@ var save = function(entity) {
 			type : "POST",
 			data:data,
 			success : function(data) {
+				$('#'+entity+'-show-message').hide();
 				showHideCreate(entity,false);
 			}
 		});
@@ -197,7 +198,7 @@ var edit = function(entity, id){
 
 //function called when user clicks on the cancel button
 var cancel = function(entity) {
-	$('.message').hide();
+	$('#'+entity+'-show-message').hide();
 	//hiding the create container in the tab
 	showHideCreate(entity, false);
 }
@@ -247,6 +248,27 @@ var getData=function(url,filterData,successFn,errorFn){
 	});
 }
 
+var sendChatInvite = function() {
+	  var chatId = $('#chatId').val();
+	  var parameter=new Array();
+	  parameter[parameter.length]=new param('chatId',chatId);
+	  $.ajax({
+			url : "/sendInvite",
+			type : "POST",
+			data:parameter,
+			dataType:"html", 
+			success : function(resp) {
+				showMessage(resp, 'order');
+				//calling the user defined success function
+				$('#chatId').val('');
+			},
+			error:function(e){
+			//calling the user defined error function
+				alert('Error'+e);
+			}
+	});
+}
+
 //function to populate the select box which takes input as id of the selectbox element and url to get the data
 var populateSelectBox = function(id, url) {
 	//specifying the success function. When the ajax response is successful then the following function will be called
@@ -293,7 +315,7 @@ var populateList=function(entity, filter){
 					htm+='<td>'+data[i].name+'</td><td>'+data[i].price+'</td><td>'+data[i].product+'</td>';
 					break;
 				case ENTITY_ORDER:
-					htm+='<td>'+data[i].name+'</td><td>'+data[i].itemName+'</td><td>'+data[i].customerName+'</td><td>'+data[i].shipTo+','+data[i].city+','+data[i].state+'-'+data[i].zip+'</td><td>'+data[i].quantity+'</td><td>'+data[i].price+'</td>';
+					htm+='<td>'+data[i].name+'</td><td>'+data[i].itemName+'</td><td>'+data[i].customerName+'</td><td>'+data[i].shipTo+','+data[i].city+','+data[i].state+'-'+data[i].zip+'</td><td>'+data[i].quantity+'</td><td>'+data[i].price+'</td><td>'+data[i].status+'</td>';
 					break;
 				case ENTITY_CUSTOMER:
 					htm+='<td>'+data[i].name+'</td><td>'+data[i].firstName+'</td><td>'+data[i].lastName+'</td><td>'+data[i].address+','+data[i].city+','+data[i].state+'-'+data[i].zip+'</td><td>'+data[i].phone+'</td><td>'+data[i].eMail+'</td>';
@@ -310,7 +332,7 @@ var populateList=function(entity, filter){
 		else{
 			//condition to show message when data is not available
 			var thElesLength=$('#'+entity+'-list-ctr table thead th').length;
-			htm+='<tr><td colspan="'+thElesLength+'">No items found</td></tr>';
+			htm+='<tr><td colspan="'+thElesLength+'">No records found</td></tr>';
 		}
 		$('#'+entity+'-list-tbody').html(htm);
 	}

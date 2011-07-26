@@ -37,6 +37,22 @@
 		<servlet-name>ItemServlet</servlet-name>
 		<url-pattern>/item</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>CustomerServlet</servlet-name>
+		<servlet-class>com.google.appengine.codelab.CustomerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CustomerServlet</servlet-name>
+		<url-pattern>/customer</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>OrderServlet</servlet-name>
+		<servlet-class>com.google.appengine.codelab.OrderServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OrderServlet</servlet-name>
+		<url-pattern>/order</url-pattern>
+	</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

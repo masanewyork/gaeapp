@@ -1,6 +1,8 @@
 var HOME='home';
+var ENTITY_CUSTOMER='customer';
 var ENTITY_PRODUCT='product';
 var ENTITY_ITEM='item';
+var ENTITY_ORDER='order';
 
 //function to initialize the page
 var init = function() {
@@ -22,6 +24,8 @@ var showTab = function(entity) {
 	$('.g-unit').hide();
 	//showing the selected tab
 	$('#' + entity + '-tab').show();
+	//hiding the message block
+	$('.message').hide();
 	//hiding the create block
 	showHideCreate(entity, false);
 	if(entity!=HOME)
@@ -65,11 +69,17 @@ var add = function(entity) {
 	//display the create container
 	showHideCreate(entity, true);
 	$("span.readonly input").attr('readonly', false);
+	$("select[id$=order-customer-list] > option").remove();
+	$("select[id$=order-item-list] > option").remove();
 	$("select[id$=item-product-list] > option").remove();
 	//checking the entity to populate the select box
 	if (entity == ENTITY_ITEM) {
 		//populating the product and contact by making an ajax call
 		populateSelectBox('item-product-list', '/product');
+	}  else if (entity == ENTITY_ORDER){
+		// populating the customer and item select box by making an ajax call
+		populateSelectBox('order-customer-list','/customer');
+		populateSelectBox('order-item-list','/item');
 	}
 }
 
@@ -103,6 +113,26 @@ var formValidate = function(entity){
 				return;
 			}
 			break;
+		case ENTITY_ORDER:
+			var valueCustomer=$('#order-customer-list').val();
+			var valueItem = $('#order-item-list').val();
+			if(valueCustomer == "" || valueItem==""){
+				showMessage('please check the Customer and Item values in the form', entity);
+				return;
+			}
+			break;
+		case ENTITY_CUSTOMER:
+			var hasError = false;
+		    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+		    var emailaddressVal = $("#eMail").val();
+		    if(emailaddressVal == '' || !emailReg.test(emailaddressVal)|| key=="") {
+		      hasError = true;
+		    }
+		    if(hasError == true){
+		    	showMessage('please check the name and email values in the form', entity);
+				return;
+		    }
+			break;
 		default :
 			if(key==""){
 				showMessage('please check the values in the form', entity);
@@ -116,8 +146,7 @@ var formValidate = function(entity){
 
 //function to save an entity
 var save = function(entity) {
-	$('#'+entity+'-show-message').hide();
-	// creating the data object to be sent to backend
+		// creating the data object to be sent to backend
 	 var data=new Array();
 	// collecting the field values from the form
 	 var formEleList = $('form#'+entity+'-create-form').serializeArray();
@@ -136,7 +165,6 @@ var save = function(entity) {
 			}
 		});
 	 $('#'+entity+'-reset').click();
-	 $('#item-product-list').reset();//='';
 }
 
 //function to edit entity
@@ -153,7 +181,7 @@ var edit = function(entity, id){
 			for(var i=0;i<formElements.length;i++){
 				if(formElements[i].type !="button"){
 					var ele=$(formElements[i]);
-					if(ele.attr('name')=="product"){						
+					if(ele.attr('name')=="product"){
 						$("select[id$=item-product-list] > option").remove();
 						ele.append('<option value="'+eval('data.'+ele.attr('name'))+'">'+eval('data.'+ele.attr('name'))+'</option>');	
 					}
@@ -165,7 +193,6 @@ var edit = function(entity, id){
 			$("span.readonly input").attr('readonly', true);
 		}
 	});
-
 }
 
 //function called when user clicks on the cancel button
@@ -183,19 +210,20 @@ var deleteEntity = function(entity,id,parentid) {
 	parameter[parameter.length]=new param('action','DELETE');
 	//making the ajax call
 	$.ajax({
-		url : "/"+entity,
-		type : "POST",
-		data:parameter,
-		dataType:"html",
-		success : function(resp) {
-			showHideCreate(entity,false);
-			if (resp!=''){
+			url : "/"+entity,
+			type : "POST",
+			data:parameter,
+			dataType:"html",
+			success : function(resp) {
+				showHideCreate(entity,false);
+				if (resp!=''){
+					showMessage(resp, entity);
+				}
+				
+			},
+			error : function(resp){
 				showMessage(resp, entity);
 			}
-		},
-		error : function(resp){
-			showMessage(resp, entity);
-		}
 	});
 }
 
@@ -264,13 +292,19 @@ var populateList=function(entity, filter){
 				case ENTITY_ITEM:
 					htm+='<td>'+data[i].name+'</td><td>'+data[i].price+'</td><td>'+data[i].product+'</td>';
 					break;
+				case ENTITY_ORDER:
+					htm+='<td>'+data[i].name+'</td><td>'+data[i].itemName+'</td><td>'+data[i].customerName+'</td><td>'+data[i].shipTo+','+data[i].city+','+data[i].state+'-'+data[i].zip+'</td><td>'+data[i].quantity+'</td><td>'+data[i].price+'</td>';
+					break;
+				case ENTITY_CUSTOMER:
+					htm+='<td>'+data[i].name+'</td><td>'+data[i].firstName+'</td><td>'+data[i].lastName+'</td><td>'+data[i].address+','+data[i].city+','+data[i].state+'-'+data[i].zip+'</td><td>'+data[i].phone+'</td><td>'+data[i].eMail+'</td>';
+					break;
 				default:
 					htm+=""; 
 				}
-				if(entity == ENTITY_ITEM)
-					htm+='<td><a href="#" class="delete-entity" onclick=\'deleteEntity("'+entity+'","'+data[i].name+'","'+data[i].product+'")\'>Delete</a> | <a href="#" class="edit-entity" onclick=\'edit("'+entity+'","'+data[i].name+'")\'>Edit</a></td></tr>';
+				if(entity != ENTITY_ORDER)
+					htm+='<td><a href="#" class="delete-entity" onclick=\'deleteEntity("'+entity+'","'+data[i].name+'",null)\'>Delete</a> | <a href="#" class="edit-entity" onclick=\'edit("'+entity+'","'+data[i].name+'")\'>Edit</a></td></tr>';
 				else
-					htm+='<td><a href="#" class="delete-entity" onclick=\'deleteEntity("'+entity+'","'+data[i].name+'")\'>Delete</a> | <a href="#" class="edit-entity" onclick=\'edit("'+entity+'","'+data[i].name+'")\'>Edit</a></td></tr>';
+					htm+='<td><a href="#" class="delete-entity" onclick=\'deleteEntity("'+entity+'","'+data[i].name+'","'+data[i].customerName+'")\'>Delete</a></td></tr>';
 			}
 		}
 		else{

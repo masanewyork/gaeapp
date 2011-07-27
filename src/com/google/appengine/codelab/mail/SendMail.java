@@ -36,7 +36,7 @@ public class SendMail {
   private static Logger log = Logger.getLogger(SendMail.class.getCanonicalName());
 
   //mail id from which the mail has to be sent
-  private static String fromAddress = "sravani.konkimalla@gmail.com";
+  private static String fromAddress = "masanewyork@gmail.com";
   
   /**
    * Method defines the way to send a mail

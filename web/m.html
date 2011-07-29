@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width">
+	<title>Mobile App Demo</title>
+
+	<link href="stylesheets/jquery.mobile-1.0b1.min.css" rel="stylesheet" type="text/css"/>
+	<script language="javascript" src='script/jquery-1.6.min.js'></script>
+	<script language="javascript" src='script/ajax.util2.js'></script>
+	<script language="javascript" src='script/jquery.mobile-1.0b1.js'></script>
+</head>
+
+<body>
+<div data-role="page" id="product-tab">
+
+	<div data-role="header">
+		Mobile App Demo
+	</div>
+	<div data-role="content">
+
+		<!-- ******************************************* product ******************************************* -->
+		<div class="message" id="product-show-message" style="display:none">
+		</div>
+		<!-- search container -->
+		<div class="gsc-search-box" id="product-search-ctr">
+			<!-- section title -->
+			<h2>All Products</h2>
+			<form name="product-search-form" id="product-search-form">
+				<label>Name</label>
+				<input type="text" name="q" id="q" class="gsc-input"/>
+				<input type="button" value="Search" onclick="search('product')" class="gsc-search-button"/>
+			</form>
+		</div>
+		<!-- list container -->
+		<div class="results" style="border:0;" id="product-list-ctr">
+			<ul id="product-listview" data-role="listview" data-theme="g"></ul>
+		</div>
+	</div>
+	<div data-role="footer">Copyright M.Nakahara</div>
+
+	<!--<script type="text/javascript">-->
+
+	<!--$(window).load(function () {-->
+	<!--init();-->
+	<!--});-->
+
+	<!--</script>-->
+</div>
+<!-- item-tab -->
+<div data-role="page" id="item-tab">
+	<div data-role="header">
+		Mobile App Demo
+	</div>
+	<div data-role="content">
+
+		<!-- ******************************************* item ******************************************* -->
+		<div class="message" id="item-show-message" style="display:none">
+		</div>
+		<!-- search container -->
+		<div class="gsc-search-box" id="item-search-ctr">
+			<!-- section title -->
+			<h2>All items</h2>
+
+			<form name="item-search-form" id="item-search-form">
+				<label>Name</label>
+				<input type="text" name="q" id="q" class="gsc-input"/>
+				<input type="button" value="Search" onclick="search('item')" class="gsc-search-button"/>
+				<input type="reset" id="item-search-reset" class="cancel" title="Reset" value="Reset"
+					   style="visibility: hidden"/>
+			</form>
+		</div>
+		<!-- list container -->
+		<div class="results" style="border:0;" id="item-list-ctr">
+			<table width="100%" cellspacing="0" cellpadding="2" border="0" style="border-collapse:collapse;">
+				<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Description</th>
+					<th scope="col">Action</th>
+				</tr>
+				</thead>
+				<tbody id="item-list-tbody"></tbody>
+			</table>
+		</div>
+	</div>
+	<div data-role="footer">Copyright M.Nakahara</div>
+
+	<!--<script type="text/javascript">-->
+
+	<!--$(window).load(function () {-->
+	<!--init();-->
+	<!--});-->
+
+	<!--</script>-->
+</div>
+<!-- item-tab -->
+	<script type="text/javascript">
+		$("div[data-role='page']").css('width',$("#container_element").innerWidth()+"px");		
+	</script>
+</body>
+</html>

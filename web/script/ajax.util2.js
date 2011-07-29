@@ -309,7 +309,7 @@ var populateList=function(entity, filter){
 				switch(entity)
 				{
 				case ENTITY_PRODUCT:
-					htm+='<li><a href="#item-tab" data-transition="slide" onclick="search(''item'')">'+data[i].name+'</a></li>';
+					htm+='<li><a href="#item-tab" data-transition="slide" onclick="search(\'item\')">'+data[i].name+'</a></li>';
 					break;
 				case ENTITY_ITEM:
 					htm+='<li><a href="#item" data-transition="slide">'+data[i].name+'</a></li>';

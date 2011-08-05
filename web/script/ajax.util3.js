@@ -301,10 +301,10 @@ var populateList=function(entity, filter){
 				switch(entity)
 				{
 				case ENTITY_PRODUCT:
-					htm+='<li><a href="#item-tab" data-transition="slide" onclick="pname=\''+data[i].name+'\'">'+data[i].name+'</a></li>';
+					htm+='<li><a rel="external" href="m1.jsp?q=' + data[i].name + '" data-transition="slide">'+data[i].name+'</a></li>';
 					break;
 				case ENTITY_ITEM:
-					htm+='<li><a href="#item-detail-tab" data-rel="dialog" data-transition="pop" onclick="iname=\''+data[i].name+'\'">'+data[i].name+'</a></li>';
+					htm+='<li><a rel="external" href="m2.jsp?q=' + data[i].name + '" data-transition="dialog">'+data[i].name+'</a></li>';
 					break;
 				case ENTITY_CUSTOMER:
 					htm+='<td>'+data[i].name+'</td><td>'+data[i].firstName+'</td><td>'+data[i].lastName+'</td><td>'+data[i].address+','+data[i].city+','+data[i].state+'-'+data[i].zip+'</td><td>'+data[i].phone+'</td><td>'+data[i].eMail+'</td>';

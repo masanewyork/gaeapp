@@ -16,7 +16,7 @@
 <div data-role="page" id="product-tab">
 
 	<div data-role="header">
-		Mobile App Demo
+		<h1>Mobile App Demo</h1>
 	</div>
 	<div data-role="content">
 
@@ -39,65 +39,75 @@
 		</div>
 	</div>
 	<div data-role="footer">Copyright M.Nakahara</div>
-
-	<!--<script type="text/javascript">-->
-
-	<!--$(window).load(function () {-->
-	<!--init();-->
-	<!--});-->
-
-	<!--</script>-->
 </div>
 <!-- item-tab -->
 <div data-role="page" id="item-tab">
-	<div data-role="header">
-		Mobile App Demo
+	<div data-role="header" >
+		<h1>Mobile App Demo</h1>
 	</div>
 	<div data-role="content">
 
 		<!-- ******************************************* item ******************************************* -->
 		<div class="message" id="item-show-message" style="display:none">
 		</div>
-		<!-- search container -->
-		<div class="gsc-search-box" id="item-search-ctr">
-			<!-- section title -->
-			<h2>All items</h2>
-
-			<form name="item-search-form" id="item-search-form">
-				<label>Name</label>
-				<input type="text" name="q" id="q" class="gsc-input"/>
-				<input type="button" value="Search" onclick="search('item')" class="gsc-search-button"/>
-				<input type="reset" id="item-search-reset" class="cancel" title="Reset" value="Reset"
-					   style="visibility: hidden"/>
-			</form>
-		</div>
+		<form name="item-search-form" id="item-search-form">
+			<input type="text" name="q" id="qq"/>
+			<input type="text" name="item-searchby" id="item-searchby" value="product"/>
+		</form>
 		<!-- list container -->
 		<div class="results" style="border:0;" id="item-list-ctr">
-			<table width="100%" cellspacing="0" cellpadding="2" border="0" style="border-collapse:collapse;">
-				<thead>
-				<tr>
-					<th scope="col">Name</th>
-					<th scope="col">Description</th>
-					<th scope="col">Action</th>
-				</tr>
-				</thead>
-				<tbody id="item-list-tbody"></tbody>
-			</table>
+			<ul id="item-listview" data-role="listview" data-theme="g"></ul>
 		</div>
+		<a href="#product-tab" data-direction="reverse" data-role="button" data-theme="b">Back to Product Page</a>
 	</div>
 	<div data-role="footer">Copyright M.Nakahara</div>
-
-	<!--<script type="text/javascript">-->
-
-	<!--$(window).load(function () {-->
-	<!--init();-->
-	<!--});-->
-
-	<!--</script>-->
 </div>
-<!-- item-tab -->
+
+<!-- item-detail tab -->
+<div data-role="page" id="item-detail-tab">
+	<div data-role="header">
+		<h1>Mobile App Demo</h1>
+	</div>
+	<div data-role="content">
+
+		<!-- ******************************************* item ******************************************* -->
+		<div class="message" id="item-detail-show-message" style="display:none">
+		</div>
+		<!-- list container -->
+		<div class="results" style="border:0;" id="item-detail-ctr">
+			<form name="item-create-form" id="item-create-form">
+			<table width="200" cellspacing="0" cellpadding="0">
+			 <tr>
+				  <td>Item Name</td>
+			   <td ><span class="readonly"><input type="text" style="width: 185px;" autocomplete="off" class="gsc-input" maxlength="2048" name="name" id="name" /></span></td>
+			 </tr>
+			 <tr>
+			   <td>Selling Price</td>
+			   <td><input type="text" style="width: 185px;" autocomplete="off" class="gsc-input" maxlength="2048" name="price" id="price" /></td>
+			 </tr>
+			 <tr>
+			   <td>Product</td>
+				 <td><input type="text" style="width: 185px;" autocomplete="off" class="gsc-input" maxlength="2048" name="product" id="product" /></td>
+			 </tr>
+			   </table>
+			   </form>
+		</div>
+		<a href="#item-tab" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back to Item Page</a>
+	</div>
+	<div data-role="footer">Copyright M.Nakahara</div>
+</div>
 	<script type="text/javascript">
-		$("div[data-role='page']").css('width',$("#container_element").innerWidth()+"px");		
+		var pname = "";
+		var iname = "";
+		$('#item-tab').live('pageshow',function(event, ui){
+		//  alert('Item Tab page was just shown: '+ zzz);
+			$('#qq').val(pname);
+			search('item');
+		});
+		$('#item-detail-tab').live('pageshow',function(event, ui){
+		//  alert('Item Tab page was just shown: '+ zzz);
+			edit('item', iname);
+		});
 	</script>
 </body>
 </html>

@@ -4,6 +4,15 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
+
+	<servlet>
+		<servlet-name>VesselPositionServlet</servlet-name>
+		<servlet-class>my.example.VesselPositionServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>VesselPositionServlet</servlet-name>
+		<url-pattern>/fetchvessel</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>ProductServlet</servlet-name>
 		<servlet-class>com.google.appengine.codelab.ProductServlet</servlet-class>

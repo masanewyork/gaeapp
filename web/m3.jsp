@@ -11,12 +11,6 @@
 	<script type="text/javascript" language="javascript" src='script/ajax.util3.js'></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		// Demonstration purpose only...
-		$(document).bind("mobileinit", function () {
-			$.mobile.ajaxEnabled = true;
-		});
-	</script>
 	<script type="text/javascript" language="javascript" src='script/jquery.mobile-1.0b1.js'></script>
 	<script src="script/jquery.ui.map.js" type="text/javascript"></script>
 </head>

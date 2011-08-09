@@ -11,7 +11,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>VesselPositionServlet</servlet-name>
-		<url-pattern>/fetchvessel</url-pattern>
+		<url-pattern>/vessel</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ShippingServlet</servlet-name>
+		<servlet-class>my.example.jpa.ShippingServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ShippingServlet</servlet-name>
+		<url-pattern>/shipping</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>ProductServlet</servlet-name>

@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +28,14 @@ public class VesselPositionServlet extends BaseServlet {
 			if ("show".equals(command)) {
 				Iterable<Entity> entities = VesselPosition.getAllVesselPositions("VesselPosition");
 				out.println(Util.writeJSON(entities));
+			} else {
+				String searchFor = req.getParameter("q");
+				Entity e = VesselPosition.getVesselPosition(searchFor);
+				if (e != null) {
+					Set<Entity> result = new HashSet<Entity>();
+					result.add(e);
+					out.println(Util.writeJSON(result));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

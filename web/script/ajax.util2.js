@@ -3,6 +3,7 @@ var ENTITY_CUSTOMER='customer';
 var ENTITY_PRODUCT='product';
 var ENTITY_ITEM='item';
 var ENTITY_ORDER='order';
+var ENTITY_VESSEL='vessel';
 
 //function to initialize the page
 var init = function() {
@@ -302,6 +303,9 @@ var populateList=function(entity, filter){
 				{
 				case ENTITY_PRODUCT:
 					htm+='<li><a href="#item-tab" data-transition="slide" onclick="pname=\''+data[i].name+'\'">'+data[i].name+'</a></li>';
+					break;
+				case ENTITY_VESSEL:
+					htm+='<li><a href="#map-tab" data-transition="slide" onclick="vname=\''+data[i].name+'\'">'+data[i].name+'</a></li>';
 					break;
 				case ENTITY_ITEM:
 					htm+='<li><a href="#item-detail-tab" data-rel="dialog" data-transition="pop" onclick="iname=\''+data[i].name+'\'">'+data[i].name+'</a></li>';

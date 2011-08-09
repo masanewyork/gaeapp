@@ -9,7 +9,7 @@
 <html>
 <head><title>Vessel page</title></head>
 <body>
-<form name="vessel-form" id="vessel-form" method="POST" action="/fetchvessel">
+<form name="vessel-form" id="vessel-form" method="POST" action="/vessel">
 	<input type="text" name="command" class="gsc-search-button"/>
 	<input type="button" value="Load" class="gsc-search-button"/>
 </form>
